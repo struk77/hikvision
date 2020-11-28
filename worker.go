@@ -14,6 +14,7 @@ type WorkerSpec struct {
 	host     string
 	login    string
 	password string
+	pause    uint
 }
 
 type Worker struct {
@@ -32,7 +33,7 @@ func NewWorker(spec WorkerSpec) *Worker {
 	}
 
 	// start main loop
-	go w.getPIRStatus()
+	go w.getPIRStatus(1000 * time.Millisecond)
 
 	return &w
 }
@@ -48,7 +49,11 @@ func (w *Worker) GetWorkerTarget(host string) *Target {
 	return t
 }
 
-func (w *Worker) getPIRStatus() {
+func (w *Worker) getPIRStatus(sleepTime time.Duration) {
+	time.Sleep(sleepTime)
+
+	go w.getPIRStatus(time.Duration(w.spec.pause) * time.Second)
+
 	uri := fmt.Sprintf("http://%s:%s@%s/ISAPI/WLAlarm/PIR", w.spec.login, w.spec.password, w.spec.host)
 	client := &http.Client{}
 	client.Timeout = time.Second * 2
