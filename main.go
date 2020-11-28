@@ -12,16 +12,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// var opts struct {
-// 	Cameras string `short:"c" long:"cameras" description:"List cameras file" value-name:"PATH" default:"/etc/hikvision/cameras.yml"`
-// 	Listen  string `short:"l" long:"listen" description:"Listen address" value-name:"[HOST]:PORT" default:":19101"`
-// 	Period  uint   `short:"p" long:"period" description:"Period in seconds, should match Prometheus scrape interval" value-name:"SECS" default:"60"`
-// }
-
 var config struct {
 	Cameras string `short:"c" long:"cameras" description:"List cameras file" value-name:"PATH" default:"cameras.yml"`
 	Listen  string `short:"l" long:"listen" description:"Listen address" value-name:"[HOST]:PORT" default:":19101"`
-	Period  uint   `short:"p" long:"period" description:"Period in seconds, should match Prometheus scrape interval" value-name:"SECS" default:"60"`
+	Pause   uint   `short:"p" long:"pause" description:"Period in seconds, should match Prometheus scrape interval" value-name:"SECS" default:"60"`
 }
 
 //Camera is a camera
@@ -82,6 +76,7 @@ func probeHandler(w http.ResponseWriter, r *http.Request) {
 			login:    camera.Login,
 			password: camera.Password,
 			host:     camera.IP,
+			pause:    config.Pause,
 		},
 	)
 
@@ -108,7 +103,7 @@ func main() {
 	a.Flag("period", "Period in seconds, should match Prometheus scrape interval").
 		Envar("PERIOD").
 		Default("60").
-		UintVar(&config.Period)
+		UintVar(&config.Pause)
 
 	// if _, err := flags.Parse(&opts); err != nil {
 	// 	os.Exit(0)
