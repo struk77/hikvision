@@ -1,0 +1,10 @@
+---
+cameras:
+- host: Living Room
+  ip: 192.168.1.100
+  login: admin
+  password: admin
+- host: Kitchen
+  ip: 192.168.1.101
+  login: admin
+  password: admin
