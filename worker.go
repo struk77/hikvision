@@ -61,17 +61,20 @@ func (w *Worker) getPIRStatus(sleepTime time.Duration) {
 	req.Header.Set("Content-Type", "text/xml")
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalln("resp, err := client.Do(req): ", err)
+		log.Println("resp, err := client.Do(req): ", err)
+		return
 	}
 	defer resp.Body.Close()
 	xmlFile, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln("xmlFile, err := ioutil.ReadAll(resp.Body): ", err)
+		log.Println("xmlFile, err := ioutil.ReadAll(resp.Body): ", err)
+		return
 	}
 	pirAlarmXML := PIRAlarmXML{}
 	err = xml.Unmarshal(xmlFile, &pirAlarmXML)
 	if err != nil {
-		log.Fatalln("err = xml.Unmarshal(xmlFile, &pirAlarmXML)", err)
+		log.Println("err = xml.Unmarshal(xmlFile, &pirAlarmXML)", err)
+		return
 	}
 	w.addResults(pirAlarmXML)
 }
@@ -80,8 +83,9 @@ func (w *Worker) addResults(pirAlarmXML PIRAlarmXML) {
 	// Parse results
 	pirAlarmStatus, err := ParsePIRAlarmStatus(pirAlarmXML)
 	if err != nil {
-		log.Fatalln("Error parsing xml: ", err)
+		log.Println("Error parsing xml: ", err)
+		return
 	}
-
+	log.Println(pirAlarmStatus)
 	w.target.AddPIRStatus(pirAlarmStatus)
 }

@@ -105,9 +105,6 @@ func main() {
 		Default("60").
 		UintVar(&config.Pause)
 
-	// if _, err := flags.Parse(&opts); err != nil {
-	// 	os.Exit(0)
-	// }
 	_, err := a.Parse(os.Args[1:])
 	if err != nil {
 		log.Printf("error parsing commandline arguments: %v\n", err)
