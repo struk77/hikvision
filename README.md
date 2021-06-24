@@ -3,5 +3,5 @@ This repository contents Prometheus Exporter for Hikvision Cameras.
 
 # Usage
 ```
-./hikvision_exporter --cameras=cameras.yml --listen=":19101" --period=60
+go build && ./hikvision_exporter --cameras=cameras.yml --listen=":19101" --period=60
 ```
